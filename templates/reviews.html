@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Reviews - Phone Radar</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .nav-menu {
+            display: flex;
+            margin-right: 20px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        
+        .content {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .review {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .review h2 {
+            color: #1a73e8;
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .review-meta {
+            color: #666;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .review-content {
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+        
+        .add-review-btn {
+            display: block;
+            width: 200px;
+            margin: 0 auto 30px;
+            padding: 12px 10px;
+            background-color: #1a73e8;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .auth-info {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .auth-info span {
+            margin-right: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <div class="header">
+        <div class="logo">🔍 Phone Radar</div>
+        <div class="nav-menu">
+            <a href="{% url 'homepage' %}">Home</a>
+            <a href="{% url 'explore_phones' %}">Phones</a>
+            <a href="{% url 'reviews' %}">Reviews</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_review' %}">Add Review</a>
+                <a href="{% url 'add_phone' %}">Add Phone</a>
+            {% endif %}
+        </div>
+        <div class="auth-info">
+            {% if user.is_authenticated %}
+                <span>Welcome, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="content">
+        <h1>Phone Reviews</h1>
+        
+        {% if user.is_authenticated %}
+        <a href="{% url 'add_review' %}" class="add-review-btn">Write a New Review</a>
+        {% endif %}
+        
+        {% if reviews %}
+            {% for review in reviews %}
+            <div class="review">
+                <h2>{% with phone=review.models.all.0 %}
+                    {% if phone %}
+                        {{ phone.brand.name }} {{ phone.name }}
+                    {% else %}
+                        Unknown Phone
+                    {% endif %}
+                {% endwith %}</h2>
+                <div class="review-meta">
+                    <strong>Reviewed by:</strong> {% if review.user %}{{ review.user.username }}{% else %}Anonymous{% endif %} | 
+                    <strong>Date:</strong> {{ review.date_published|date:"F j, Y" }}
+                </div>
+                <div class="review-content">
+                    <p>{{ review.review_article }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; color: #666;">No reviews available yet. Be the first to add one!</p>
+        {% endif %}
+    </div>
+</body>
+</html>

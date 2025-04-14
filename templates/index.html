@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Radar</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .nav-menu {
+            display: flex;
+            margin-right: 20px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        
+        .hero-section {
+            background-color: #2196f3;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .hero-content {
+            max-width: 50%;
+        }
+        
+        .hero-content h1 {
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .hero-content p {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .button {
+            padding: 8px 16px;
+            background-color: white;
+            color: #2196f3;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .hero-image {
+            background-color: #64b5f6;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .latest-phones {
+            padding: 20px;
+        }
+        
+        .latest-phones h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .phone-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .phone-card {
+            width: 175px;
+        }
+        
+        .phone-image {
+            height: 175px;
+            background-color: #ff5722;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .phone-card:nth-child(2) .phone-image {
+            background-color: #1a237e;
+        }
+        
+        .phone-card:nth-child(3) .phone-image {
+            background-color: #d50000;
+        }
+        
+        .phone-info h3 {
+            margin: 5px 0;
+            color: #333;
+        }
+        
+        .phone-info p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .phone-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .phone-button {
+            padding: 4px 8px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+        }
+        
+        .reviews-section {
+            padding: 20px;
+            background-color: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-info {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .auth-info span {
+            margin-right: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <div class="header">
+        <div class="logo">🔍 Phone Radar</div>
+        <div class="nav-menu">
+            <a href="{% url 'index' %}">Home</a>
+            <!-- <a href="#">Brands</a> !-->
+            <a href="{% url 'explore_phones' %}">Phones</a>
+            <a href="{% url 'reviews' %}">Reviews</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_review' %}">Add Review</a>
+                <a href="{% url 'add_phone' %}">Add Phone</a>
+            {% endif %}
+        </div>
+        <div class="auth-info">
+            {% if user.is_authenticated %}
+                <span>Welcome, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Hero section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to Phone Radar</h1>
+            <p>Your trusted source for comprehensive mobile phone reviews, comparisons, and the latest information on smartphone technology.</p>
+            <div class="action-buttons">
+                <a href="{% url 'reviews' %}" class="button">Browse Reviews</a>
+                <a href="{% url 'explore_phones' %}" class="button">Explore Phones</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            Phone Radar
+        </div>
+    </div>
+    
+    <!-- Latest phones section -->
+    <div class="latest-phones">
+        <h2>Latest Phones</h2>
+        {% if user.is_authenticated %}
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'add_phone' %}" class="button" style="background-color: #2196f3; color: white;">Add New Phone</a>
+        </div>
+        {% endif %}
+        <div class="phone-grid">
+            {% for phone in latest_phones %}
+            <div class="phone-card">
+                <div class="phone-image">
+                    {{ phone.brand.name }} {{ phone.name }}
+                </div>
+                <div class="phone-info">
+                    <h3>{{ phone.brand.name }} {{ phone.name }}</h3>
+                    <p>{{ phone.brand.name }} | Released {{ phone.launch_date|date:"F Y" }}</p>
+                    <div class="phone-buttons">
+                        <a href="#" class="phone-button">Details</a>
+                        <a href="#" class="phone-button">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Reviews section -->
+    <div class="reviews-section" id="reviews">
+        <h2>Recent Reviews</h2>
+        {% if user.is_authenticated %}
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'add_review' %}" class="button" style="background-color: #2196f3; color: white;">Write a Review</a>
+        </div>
+         {% endif %}
+        {% for review in reviews %}
+        <div class="review">
+            <h3>{% with phone=review.models.all.0 %}
+                {% if phone %}
+                    {{ phone.brand.name }} {{ phone.name }}
+                {% else %}
+                    Unknown Phone
+                {% endif %}
+            {% endwith %}</h3>
+            <p>{{ review.review_article }}</p>
+            <p>
+                <strong>By: </strong>
+                {% if review.user %}{{ review.user.username }}{% else %}Anonymous{% endif %}
+                <strong>Date: </strong>{{ review.date_published }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

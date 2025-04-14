@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Review - Phone Radar</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .nav-menu {
+            display: flex;
+            margin-right: 20px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            height: 150px;
+        }
+        
+        select[multiple] {
+            height: 120px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #0b7dda;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <div class="header">
+        <div class="logo">🔍 Phone Radar</div>
+        <div class="nav-menu">
+            <a href="{% url 'index' %}">Home</a>
+             <!--  <a href="#">Brands</a>-->
+            <a href="{% url 'explore_phones' %}">Phones</a>
+            <a href="{% url 'reviews' %}">Reviews</a>
+        </div>
+    </div>
+    
+    <div class="content">
+        <h1>Add a New Review</h1>
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="review_article">Review Content:</label>
+                <textarea id="review_article" name="review_article" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="models">Select Phone Models:</label>
+                <select id="models" name="models" multiple required>
+                    {% for model in models %}
+                        <option value="{{ model.id }}">{{ model.brand.name }} {{ model.name }}</option>
+                    {% endfor %}
+                </select>
+                <small>Hold Ctrl (or Cmd on Mac) to select multiple phones.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="date_published">Publication Date:</label>
+                <input type="date" id="date_published" name="date_published" value="{% now 'Y-m-d' %}" required>
+            </div>
+            
+            <button type="submit">Submit Review</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Phones - Phone Radar</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Include similar styling to homepage */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .nav-menu {
+            display: flex;
+            margin-right: 20px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .phones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .phone-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .phone-image {
+            height: 200px;
+            background-color: #2196f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .phone-info {
+            padding: 15px;
+        }
+        
+        .phone-info h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .phone-details {
+            margin: 10px 0;
+            color: #666;
+        }
+        
+        .auth-info {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .auth-info span {
+            margin-right: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <div class="header">
+        <div class="logo">🔍 Phone Radar</div>
+        <div class="nav-menu">
+            <a href="{% url 'index' %}">Home</a>
+            <!--  <a href="#">Brands</a>  -->
+            <a href="{% url 'explore_phones' %}">Phones</a>
+            <a href="{% url 'reviews' %}">Reviews</a>
+        </div>
+        <div class="auth-info">
+            {% if user.is_authenticated %}
+                <span>Welcome, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="content">
+        <h1>Explore Phones</h1>
+        
+        <div class="phones-grid">
+            {% for phone in phones %}
+            <div class="phone-card">
+                <div class="phone-image">
+                    {{ phone.brand.name }} {{ phone.name }}
+                </div>
+                <div class="phone-info">
+                    <h3>{{ phone.brand.name }} {{ phone.name }}</h3>
+                    <div class="phone-details">
+                        <p><strong>Platform:</strong> {{ phone.platform }}</p>
+                        <p><strong>Launch Date:</strong> {{ phone.launch_date }}</p>
+                        <p><strong>Brand Origin:</strong> {{ phone.brand.origin }}</p>
+                    </div>
+                    <a href="#" class="button">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

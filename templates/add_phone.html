@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Phone - Phone Radar</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .nav-menu {
+            display: flex;
+            margin-right: 20px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #0b7dda;
+        }
+        
+        .brand-toggle {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .toggle-option {
+            padding: 8px 15px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .toggle-option.active {
+            background-color: #2196f3;
+            color: white;
+            border-color: #2196f3;
+        }
+        
+        #existing-brand-section, #new-brand-section {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .divider {
+            margin: 20px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        h2 {
+            color: #555;
+            font-size: 18px;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <div class="header">
+        <div class="logo">🔍 Phone Radar</div>
+        <div class="nav-menu">
+            <a href="{% url 'index' %}">Home</a>
+            <!-- <a href="#">Brands</a> -->
+            <a href="{% url 'explore_phones' %}">Phones</a>
+            <a href="{% url 'reviews' %}">Reviews</a>
+        </div>
+    </div>
+    
+    <div class="content">
+        <h1>Add a New Phone</h1>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="brand-toggle">
+                <div class="toggle-option active" id="toggle-existing">Use Existing Brand</div>
+                <div class="toggle-option" id="toggle-new">Create New Brand</div>
+            </div>
+            
+            <div id="existing-brand-section">
+                <div class="form-group">
+                    <label for="brand">Select a Brand:</label>
+                    <select id="brand" name="brand">
+                        <option value="">Select a brand</option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}">{{ brand.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div id="new-brand-section" style="display: none;">
+                <h2>Add a New Brand</h2>
+                <div class="form-group">
+                    <label for="new_brand_name">Brand Name:</label>
+                    <input type="text" id="new_brand_name" name="new_brand_name" placeholder="e.g., Samsung, Apple, Google">
+                </div>
+                
+                <div class="form-group">
+                    <label for="brand_origin">Country of Origin:</label>
+                    <input type="text" id="brand_origin" name="brand_origin" placeholder="e.g., South Korea, USA, China">
+                </div>
+                
+                <div class="form-group">
+                    <label for="manufacturing_since">Manufacturing Since (Year):</label>
+                    <input type="number" id="manufacturing_since" name="manufacturing_since" placeholder="e.g., 1969" min="1900" max="2030">
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <h2>Phone Model Details</h2>
+            <div class="form-group">
+                <label for="name">Model Name:</label>
+                <input type="text" id="name" name="name" required placeholder="e.g., Galaxy S24, iPhone 15">
+            </div>
+            
+            <div class="form-group">
+                <label for="launch_date">Launch Date:</label>
+                <input type="date" id="launch_date" name="launch_date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="platform">Platform:</label>
+                <input type="text" id="platform" name="platform" placeholder="e.g., Android 14, iOS 17" required>
+            </div>
+            
+            <button type="submit">Add Phone</button>
+        </form>
+    </div>
+    
+    <script>
+        document.getElementById('toggle-existing').addEventListener('click', function() {
+            document.getElementById('existing-brand-section').style.display = 'block';
+            document.getElementById('new-brand-section').style.display = 'none';
+            this.classList.add('active');
+            document.getElementById('toggle-new').classList.remove('active');
+            document.getElementById('brand').setAttribute('required', '');
+            document.getElementById('new_brand_name').removeAttribute('required');
+            document.getElementById('brand_origin').removeAttribute('required');
+            document.getElementById('manufacturing_since').removeAttribute('required');
+        });
+        
+        document.getElementById('toggle-new').addEventListener('click', function() {
+            document.getElementById('existing-brand-section').style.display = 'none';
+            document.getElementById('new-brand-section').style.display = 'block';
+            this.classList.add('active');
+            document.getElementById('toggle-existing').classList.remove('active');
+            document.getElementById('brand').removeAttribute('required');
+            document.getElementById('new_brand_name').setAttribute('required', '');
+            document.getElementById('brand_origin').setAttribute('required', '');
+            document.getElementById('manufacturing_since').setAttribute('required', '');
+        });
+    </script>
+</body>
+</html>
