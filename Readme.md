@@ -32,7 +32,7 @@ Access the admin panel at http://127.0.0.1:8000/admin/
 Manage users, brands, phone models, and reviews
 Moderate content and maintain the platform
 
-🗂️ Project Structure
+# 🗂️ Project Structure
 
 phoneradar/
 ├── main/                  # Main app with core functionality
